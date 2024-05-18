@@ -10,16 +10,17 @@ from game_time import GameTime
 @dataclass
 class Player:
     _speed: int
-    _position: Vector2
+    _rect: pygame.Rect
     _image: pygame.image
     
     def __init__(self, image: pygame.image, initial_position: Vector2):
         self._image = image
-        self._position = initial_position
+        self._rect = self._image.get_rect()
+        self._rect.center = initial_position + Vector2(self._rect.width // 2, self._rect.height // 2)
         self._speed = PLAYER_SPEED
         
 
-    def handle_input(self):
+    def get_move_direction(self) -> Vector2:
         keys = pygame.key.get_pressed()
         
         direction = Vector2(0, 0)
@@ -34,16 +35,19 @@ class Player:
             direction += Vector2(1, 0)
             
         if direction.length() > 0:
-            self._move(direction.normalize())
+            return direction.normalize() * self._speed * GameTime.delta_time()
+        
+        return Vector2(0, 0)
         
     
-    def _move(self, direction: Vector2):
-        self._position += direction * self._speed * GameTime.delta_time()
+    def move(self, direction: Vector2):
+        self._rect.move_ip(direction)
         
         
-    def get_position(self) -> Vector2:
-        return self._position
+    @property
+    def rect(self):
+        return self._rect
     
     
     def draw(self, screen: pygame.Surface):
-        screen.blit(self._image, self._position)
+        screen.blit(self._image, self._rect)

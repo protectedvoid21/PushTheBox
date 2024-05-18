@@ -1,24 +1,35 @@
 from abc import ABC
 from dataclasses import dataclass
 
-from pygame import image, Vector2
+from pygame import image, Rect
 
 
 @dataclass
 class Block(ABC):
     _img: image
-    _position: Vector2
+    _rect: Rect
     _pushable: bool = False
     _is_solid: bool = False
     
-    def __init__(self, img: image, position: Vector2):
+    def __init__(self, img: image, rect: Rect, pushable: bool, is_solid: bool):
         self._img = img
-        self._position = position
+        self._rect = rect
+        self._pushable = pushable
+        self._is_solid = is_solid
         
+        
+    @property
+    def is_pushable(self) -> bool:
+        return self._pushable
+    
+    @property
+    def is_solid(self) -> bool:
+        return self._is_solid
+    
     @property
     def image(self) -> image:
         return self._img
-    
+            
     @property
-    def position(self) -> Vector2:
-        return self._position
+    def rect(self) -> Rect:
+        return self._rect
