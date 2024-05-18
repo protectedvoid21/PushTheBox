@@ -28,4 +28,4 @@ class InGameState(State):
         self._player.draw(screen)
         
         for block in self._blocks:
-            screen.blit(block.image, block.position.get_tuple())
+            screen.blit(block.image, block.position)

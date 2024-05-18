@@ -3,4 +3,6 @@ SCREEN_HEIGHT = 600
 FRAMERATE = 60
 MAIN_TITLE = "Push the Box!"
 
+BLOCK_SIZE = 50
+
 LEVELS_DIR = 'levels'
