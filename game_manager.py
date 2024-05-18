@@ -22,7 +22,7 @@ class GameManager:
         pygame.init()
         
         self._surface = pygame.display.set_mode(self._screen_size)
-        pygame.display.set_caption(generate_title())
+        pygame.display.set_caption(MAIN_TITLE + ' - ' + generate_title())
         self._current_state = InGameState(self._surface, self)
         
         
