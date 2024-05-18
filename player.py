@@ -32,11 +32,11 @@ class Player:
         if keys[pygame.K_d]:
             direction += Vector(1, 0)
             
-        self._move(direction)
+        self._move(direction.normalize())
         
     
     def _move(self, direction: Vector):
-        self._position += direction * self._speed * GameTime.delta_time
+        self._position += direction * self._speed * GameTime.delta_time()
         
         
     def get_position(self) -> Vector:

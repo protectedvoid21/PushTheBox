@@ -18,5 +18,11 @@ class Vector:
     def __sub__(self, other):
         return Vector(self.x - other.x, self.y - other.y)
     
+    def normalize(self):
+        magnitude = (self.x ** 2 + self.y ** 2) ** 0.5
+        if magnitude == 0:
+            return Vector(0, 0)
+        return Vector(self.x / magnitude, self.y / magnitude)
+    
     def get_tuple(self) -> tuple[float, float]:
         return self.x, self.y

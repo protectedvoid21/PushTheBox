@@ -5,11 +5,9 @@ from pygame import Surface
 
 @dataclass
 class State(ABC):
-    _screen: Surface
     _game_manager: any
     
-    def __init__(self, screen: Surface, game_manager):
-        self._screen = screen
+    def prepare(self, game_manager):
         self._game_manager = game_manager
         
     @abstractmethod
@@ -17,5 +15,5 @@ class State(ABC):
         ...
 
     @abstractmethod
-    def draw(self):
+    def draw(self, screen: Surface):
         ...

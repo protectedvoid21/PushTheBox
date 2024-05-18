@@ -7,13 +7,14 @@ from pygame import Surface
 from constants import *
 from game_time import GameTime
 from in_game_state import InGameState
+from levels.level_loader import LevelLoader
 from state import State
 from title_generator import generate_title
 
 
 @dataclass
 class GameManager:
-    _surface: Surface
+    _screen: Surface
     _screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
     _current_state: State = None
     _game_time = GameTime(FRAMERATE)
@@ -21,9 +22,18 @@ class GameManager:
     def __init__(self):
         pygame.init()
         
-        self._surface = pygame.display.set_mode(self._screen_size)
+        self._screen = pygame.display.set_mode(self._screen_size)
         pygame.display.set_caption(MAIN_TITLE + ' - ' + generate_title())
-        self._current_state = InGameState(self._surface, self)
+        
+        #TEMP
+        
+        level_loader = LevelLoader()
+        blocks = level_loader.load(1)
+        
+        #TEMP
+        
+        self._current_state = InGameState(blocks)
+        self._current_state.prepare(self)
         
         
     def run(self):
@@ -36,7 +46,7 @@ class GameManager:
             self._game_time.update()
             
             self._current_state.update()
-            self._current_state.draw()
+            self._current_state.draw(self._screen)
             
             pygame.display.update()
         pygame.quit()
