@@ -13,9 +13,9 @@ class InGameState(State):
     _player: Player
     _blocks: list[Block]
 
-    def __init__(self, blocks: list[Block]):
+    def __init__(self, blocks: list[Block], player: Player):
         self._blocks = blocks
-        self._player = Player(pygame.image.load('assets/player.png'), speed=100)
+        self._player = player
 
     def prepare(self, game_manager):
         super().prepare(game_manager)

@@ -27,10 +27,10 @@ class GameManager:
         
         #TEMP
         level_loader = LevelLoader()
-        blocks = level_loader.load(1)
+        blocks, player = level_loader.load(1)
         #TEMP
         
-        self._current_state = InGameState(blocks)
+        self._current_state = InGameState(blocks, player)
         self._current_state.prepare(self)
         
         

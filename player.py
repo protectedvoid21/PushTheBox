@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import pygame
 from pygame import Vector2
 
+from constants import PLAYER_SPEED
 from game_time import GameTime
 
 
@@ -12,10 +13,10 @@ class Player:
     _position: Vector2
     _image: pygame.image
     
-    def __init__(self, image: pygame.image, initial_position: Vector2 = Vector2(0, 0), speed: int = 1):
+    def __init__(self, image: pygame.image, initial_position: Vector2):
         self._image = image
         self._position = initial_position
-        self._speed = speed
+        self._speed = PLAYER_SPEED
         
 
     def handle_input(self):

@@ -18,7 +18,7 @@ class GameTime:
     def update(self):
         self._clock.tick(self._framerate)
         now = time.time()
-        self._delta_time = now - self._previous_time
+        GameTime._delta_time = now - self._previous_time
         self._previous_time = now
     
     

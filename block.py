@@ -1,11 +1,11 @@
-import abc
+from abc import ABC
 from dataclasses import dataclass
 
 from pygame import image, Vector2
 
 
 @dataclass
-class Block(abc.ABC):
+class Block(ABC):
     _img: image
     _position: Vector2
     _pushable: bool = False
