@@ -17,3 +17,6 @@ class Vector:
     
     def __sub__(self, other):
         return Vector(self.x - other.x, self.y - other.y)
+    
+    def get_tuple(self) -> tuple[float, float]:
+        return self.x, self.y
