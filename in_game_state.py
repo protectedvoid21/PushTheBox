@@ -26,7 +26,7 @@ class InGameState(State):
     def update(self):
         player_direction = self._player.get_move_direction()
         
-        if self._entity_manager.can_move(player_direction):
+        if self._entity_manager.can_move(self._player.rect, player_direction):
             self._player.move(player_direction)
 
 
