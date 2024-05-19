@@ -10,12 +10,14 @@ class Block(ABC):
     _rect: Rect
     _pushable: bool = False
     _is_solid: bool = False
+    _is_destination: bool = False
     
-    def __init__(self, img: image, rect: Rect, pushable: bool, is_solid: bool):
+    def __init__(self, img: image, rect: Rect, pushable: bool, is_solid: bool, is_destination: bool = False):
         self._img = img
         self._rect = rect
         self._pushable = pushable
         self._is_solid = is_solid
+        self._is_destination = is_destination
         
         
     @property
@@ -25,6 +27,10 @@ class Block(ABC):
     @property
     def is_solid(self) -> bool:
         return self._is_solid
+    
+    @property
+    def is_destination(self) -> bool:
+        return self._is_destination
     
     @property
     def image(self) -> image:

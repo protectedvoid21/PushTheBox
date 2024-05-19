@@ -14,16 +14,25 @@ class BlockData:
     image_path: str
     pushable: bool = False
     solid: bool = False
+    is_destination: bool = False
+
+
+class LevelData:
+    def __init__(self, blocks: list[Block], boxes: list[Block], destinations: list[Block], player: Player):
+        self.blocks = blocks
+        self.player = player
+        self.boxes = boxes
+        self.destinations = destinations
 
 
 class LevelLoader:
     _blocks_dict: dict[str, BlockData] = {
-        'X': BlockData('assets/dest.png'),
+        'X': BlockData('assets/dest.png', is_destination=True),
         'B': BlockData('assets/box.png', pushable=True),
         '@': BlockData('assets/wall.png', solid=True),
     }
 
-    def load(self, level_index: int) -> tuple[list[Block], Player]:
+    def load(self, level_index: int) -> LevelData:
         level_path = os.path.join(LEVELS_DIR, f'{level_index}.txt')
 
         with open(level_path, 'r') as file:
@@ -42,7 +51,8 @@ class LevelLoader:
                     block = Block(block_image,
                                   pygame.Rect(Vector2(j, i) * BLOCK_SIZE, (BLOCK_SIZE, BLOCK_SIZE)),
                                   block_data.pushable,
-                                  block_data.solid)
+                                  block_data.solid,
+                                  block_data.is_destination)
 
                     blocks.append(block)
 
@@ -54,4 +64,7 @@ class LevelLoader:
         if player is None:
             raise ValueError('Player not found in level')
 
-        return blocks, player
+        return LevelData(blocks,
+                         boxes=[block for block in blocks if block.is_pushable],
+                         destinations=[block for block in blocks if block.is_destination],
+                         player=player)
