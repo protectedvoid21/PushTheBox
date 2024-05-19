@@ -27,15 +27,13 @@ class InGameState(State):
     def prepare(self, game_manager):
         super().prepare(game_manager)
 
+
     def update(self):
         player_direction = self._player.get_move_direction()
 
         if can_move(self._blocks, self._player.rect, player_direction):
             self._player.move(player_direction)
 
-        if self.is_won():
-            print("You won!")
-            return
 
     def is_won(self) -> bool:
         for box in self._boxes:
@@ -46,6 +44,7 @@ class InGameState(State):
                 return False
 
         return True
+    
 
     def draw(self, screen: Surface):
         screen.fill((0, 0, 0))

@@ -27,7 +27,7 @@ class GameManager:
         
         #TEMP
         level_loader = LevelLoader()
-        level_data = level_loader.load(1)
+        level_data = level_loader.load(2)
         #TEMP
         
         self._current_state = InGameState(level_data)

@@ -1,8 +1,14 @@
 from abc import ABC
 from dataclasses import dataclass
 
+from enum import Enum
 from pygame import image, Rect
 
+class BlockType(Enum):
+    WALL = 'WALL'
+    BOX = 'BOX'
+    DESTINATION = 'DESTINATION'
+    PLAYER = 'PLAYER'
 
 @dataclass
 class Block(ABC):
