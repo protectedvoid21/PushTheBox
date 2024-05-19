@@ -10,9 +10,9 @@ def get_push_direction(entity_rect: Rect, pushed_rect: Rect):
     push_vector = Vector2(vecs_subtracted)
     
     if abs(push_vector.x) > abs(push_vector.y):
-        return Vector2(math.copysign(1, push_vector.magnitude()), 0)
+        return Vector2(math.copysign(1, push_vector.x), 0)
     else:
-        return Vector2(0, math.copysign(1, push_vector.magnitude()))
+        return Vector2(0, math.copysign(1, push_vector.y))
 
 
 def is_close_to(a: Vector2, b: Vector2, tolerance: float):
