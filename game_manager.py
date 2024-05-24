@@ -6,9 +6,8 @@ from pygame import Surface
 
 from constants import *
 from game_time import GameTime
-from in_game_state import InGameState
-from levels.level_loader import LevelLoader
-from state import State
+from states.menu_state import MenuState
+from states.state import State
 from title_generator import generate_title
 
 
@@ -21,16 +20,15 @@ class GameManager:
     
     def __init__(self):
         pygame.init()
+        pygame.font.init()
         
         self._screen = pygame.display.set_mode(self._screen_size)
         pygame.display.set_caption(MAIN_TITLE + ' - ' + generate_title())
         
-        #TEMP
-        level_loader = LevelLoader()
-        level_data = level_loader.load(2)
-        #TEMP
+        self.change_state(MenuState())
         
-        self._current_state = InGameState(level_data)
+    def change_state(self, state: State):
+        self._current_state = state
         self._current_state.prepare(self)
         
         
