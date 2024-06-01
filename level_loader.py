@@ -9,13 +9,25 @@ from block import Block, BlockType
 from constants import LEVELS_DIR, BLOCK_SIZE
 from player import Player
 
+import yaml
+
 
 @dataclass
 class BlockData:
     block_type: BlockType
     pushable: bool = False
     solid: bool = False
-    is_destination: bool = False
+    is_target: bool = False
+
+
+def is_block_side(x: int, y: int, map: list[str]) -> bool:
+    block_char = map[y][x]
+
+    if y > 0 and map[y - 1][x] == block_char:
+        return True
+    if y < len(map) - 1 and map[y + 1][x] == block_char:
+        return True
+    return False
 
 
 class LevelData:
@@ -28,17 +40,21 @@ class LevelData:
 
 class LevelLoader:
     _asset_manager: AssetManager
+    _level_structures: dict
     _blocks_dict: dict[str, BlockData] = {
-        'X': BlockData(BlockType.DESTINATION, is_destination=True),
+        'X': BlockData(BlockType.TARGET, is_target=True),
         'B': BlockData(BlockType.BOX, pushable=True),
-        '@': BlockData(BlockType.WALL, solid=True),
+        'W': BlockData(BlockType.WALL, solid=True),
     }
 
-    def load(self, level_index: int) -> LevelData:
-        level_path = os.path.join(LEVELS_DIR, f'{level_index}.txt')
+    def __init__(self):
+        with open(LEVELS_DIR, 'r') as file:
+            lines = file.read()
+            self._level_structures = yaml.load(lines, Loader=yaml.FullLoader)
+            self._level_structures = self._level_structures['levels']
 
-        with open(level_path, 'r') as file:
-            lines = file.readlines()
+    def load(self, level_number: int) -> LevelData:
+        lines = self._level_structures[level_number]
 
         blocks: list[Block] = []
         player: Player | None = None
@@ -51,11 +67,15 @@ class LevelLoader:
                     block_data = self._blocks_dict[char]
 
                     block_image = self._asset_manager.block_images[block_data.block_type]
+
+                    if block_data.block_type == BlockType.WALL and is_block_side(j, i, lines):
+                        block_image = self._asset_manager.block_images[BlockType.WALL_SIDE]
+
                     block = Block(block_image,
                                   pygame.Rect(Vector2(j, i) * BLOCK_SIZE, (BLOCK_SIZE, BLOCK_SIZE)),
                                   block_data.pushable,
                                   block_data.solid,
-                                  block_data.is_destination)
+                                  block_data.is_target)
 
                     blocks.append(block)
 

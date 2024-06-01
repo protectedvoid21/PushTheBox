@@ -5,7 +5,7 @@ from enum import Enum
 import pygame
 from pygame import Vector2
 
-from constants import PLAYER_SPEED
+from constants import PLAYER_SPEED, PLAYER_ANIMATION_SPEED
 from game_time import GameTime
 
 class Direction(Enum):
@@ -24,7 +24,6 @@ class Player:
     _animations: dict[Direction, list[pygame.image]]
     _animation_index: int = 0
     _elapsed_time: float = 0
-    _animation_speed: float = 5
     _direction: Direction = Direction.DOWN
     
     def __init__(self, image: pygame.image, initial_position: Vector2, animations: dict[Direction, list[pygame.image]]):
@@ -62,7 +61,9 @@ class Player:
         
         
     def _animate(self):
-        self._elapsed_time += GameTime.delta_time() * self._animation_speed
+        self._elapsed_time += GameTime.delta_time() * PLAYER_ANIMATION_SPEED
+        # sin_val = math.sin(self._elapsed_time * 2) * 5
+        # self._image = pygame.transform.scale(self._image, (self._rect.width + sin_val, self._rect.height + sin_val))
         self._animation_index = math.floor(self._elapsed_time % len(self._animations[self._direction]))
                         
         self._image = self._animations[self._direction][int(self._animation_index)]

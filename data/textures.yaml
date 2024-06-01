@@ -1,0 +1,10 @@
+textures:
+  player:
+    image: player.png
+    animations: player_animations.png
+  blocks:
+    wall: wall.png
+    wall_side: wall_side.png
+    wall_corner: wall_corner.png
+    box: box.png
+    target: dest.png

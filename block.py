@@ -6,8 +6,9 @@ from pygame import image, Rect
 
 class BlockType(Enum):
     WALL = 'WALL'
+    WALL_SIDE = 'SIDE_WALL'
     BOX = 'BOX'
-    DESTINATION = 'DESTINATION'
+    TARGET = 'DESTINATION'
     PLAYER = 'PLAYER'
 
 @dataclass

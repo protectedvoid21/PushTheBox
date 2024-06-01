@@ -6,6 +6,8 @@ from pygame import Surface
 
 from constants import *
 from game_time import GameTime
+from level_loader import LevelLoader
+from states.in_game_state import InGameState
 from states.menu_state import MenuState
 from states.state import State
 from title_generator import generate_title
@@ -25,7 +27,8 @@ class GameManager:
         self._screen = pygame.display.set_mode(self._screen_size)
         pygame.display.set_caption(MAIN_TITLE + ' - ' + generate_title())
         
-        self.change_state(MenuState())
+        self.change_state(InGameState(LevelLoader().load(1)))
+        # self.change_state(MenuState())
         
     def change_state(self, state: State):
         self._current_state = state

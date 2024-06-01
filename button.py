@@ -14,19 +14,26 @@ class Button:
     _color: tuple[int, int, int]
     _click_event: callable = None
 
-    def __init__(self, rect: pygame.Rect,
+    def __init__(self, rect: tuple[int, int, int, int],
                  text: str,
                  click_event: callable,
-                 font: pygame.font.Font,
+                 font: pygame.font.Font = None,
                  color: tuple[int, int, int] = (255, 255, 255)):
-        self._rect = rect
+        self._rect = pygame.rect.Rect(rect)
         self._text = text
-        self._font = font
+        self._font = font or pygame.font.Font(None, 32)
         self._color = color
         self._click_event = click_event
 
     def add_click_event(self, event: callable):
         self._click_event = event
+
+
+    def update(self):
+        if self.is_over(Vector2(pygame.mouse.get_pos())):
+            if pygame.mouse.get_pressed()[0]:
+                if pygame.event.get(pygame.MOUSEBUTTONUP):
+                    self._click_event()
 
     def draw(self, screen: Surface):
         pygame.draw.rect(screen, self._color, self._rect)
@@ -37,9 +44,3 @@ class Button:
 
     def is_over(self, pos: Vector2) -> bool:
         return self._rect.collidepoint(pos)
-
-    def update(self):
-        if self.is_over(Vector2(pygame.mouse.get_pos())):
-            if pygame.mouse.get_pressed()[0]:
-                if pygame.event.get(pygame.MOUSEBUTTONUP):
-                    self._click_event()

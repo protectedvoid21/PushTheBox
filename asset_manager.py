@@ -2,9 +2,10 @@ import os
 from dataclasses import dataclass
 
 import pygame
+import yaml
 
 from block import BlockType
-from constants import BLOCK_SIZE, PLAYER_TILE_SIZE, PLAYER_SIZE
+from constants import BLOCK_SIZE, PLAYER_TILE_SIZE, PLAYER_SIZE, TEXTURES_PATH_DIR
 from player import Direction
 
 ASSETS_FOLDER_PATH = 'assets'
@@ -15,19 +16,28 @@ class AssetManager:
     _player_animations: dict[Direction, list[pygame.image]]
     _block_images: dict[BlockType, pygame.image]
     
+    _texture_paths: any
+    
     def __init__(self):
-        self._player_image = pygame.image.load(os.path.join(ASSETS_FOLDER_PATH, 'player.png'))
+        with open(TEXTURES_PATH_DIR, 'r') as file:
+            self._texture_paths = yaml.load(file, Loader=yaml.FullLoader)['textures']
+        
+        self._player_image = pygame.image.load(os.path.join(ASSETS_FOLDER_PATH, self._texture_paths['player']['image']))
         self._player_image = pygame.transform.scale(self._player_image, PLAYER_SIZE)
         
-        self._block_images = {
-            BlockType.WALL: pygame.image.load(os.path.join(ASSETS_FOLDER_PATH, 'wall.png')),
-            BlockType.BOX: pygame.image.load(os.path.join(ASSETS_FOLDER_PATH, 'box.png')),
-            BlockType.DESTINATION: pygame.image.load(os.path.join(ASSETS_FOLDER_PATH, 'dest.png')),
+        block_lookup = {
+            BlockType.WALL: 'wall',
+            BlockType.WALL_SIDE: 'wall_side',
+            BlockType.BOX: 'box',
+            BlockType.TARGET: 'target',
         }
         
-        for block_type, image in self._block_images.items():
-            self._block_images[block_type] = pygame.transform.scale(image, (BLOCK_SIZE, BLOCK_SIZE))
-            
+        self._block_images = {}
+        
+        for block_type, path in block_lookup.items():
+            self._block_images[block_type] = pygame.image.load(os.path.join(ASSETS_FOLDER_PATH, self._texture_paths['blocks'][path]))
+            self._block_images[block_type] = pygame.transform.scale(self._block_images[block_type], (BLOCK_SIZE, BLOCK_SIZE))
+                    
         self._player_animations = self._parse_animations()
         
                         

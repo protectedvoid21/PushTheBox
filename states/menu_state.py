@@ -14,8 +14,8 @@ class MenuState(State):
     def __init__(self):
         super().__init__()
         self._buttons = [
-            Button(pygame.Rect(100, 100, 250, 75), "Play", font=pygame.font.Font(None, 20), color=(255, 255, 255), click_event=self.go_to_level_select),
-            Button(pygame.Rect(100, 300, 250, 75), "Exit", font=pygame.font.Font(None, 20), color=(255, 255, 255), click_event=self.exit_game)
+            Button((100, 100, 250, 75), "Play", font=pygame.font.Font(None, 20), color=(255, 255, 255), click_event=self.go_to_level_select),
+            Button((100, 300, 250, 75), "Exit", font=pygame.font.Font(None, 20), color=(255, 255, 255), click_event=self.exit_game)
         ]
 
     def go_to_level_select(self):

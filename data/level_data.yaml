@@ -1,0 +1,14 @@
+levels:
+  1:
+    - "WWWWWWWWWW"
+    - "W        W"
+    - "W P   B  W"
+    - "W       XW"
+    - "WWWWWWWWWW"   
+  2:
+    - "WWWWW   WWWW"
+    - "WX PW   W XW"
+    - "WB  WWWWW  W"
+    - "W        B W"
+    - "WWWWWWWW   W"
+    - "       WWWWW"
