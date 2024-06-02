@@ -2,7 +2,7 @@ from pygame import Surface
 
 from button import Button
 from level_loader import LevelLoader, LevelData
-import states.in_game_state
+from states.in_game_state import InGameState
 from states.state import State
 
 
@@ -24,7 +24,7 @@ class LevelSelectState(State):
     def select_level(self, level_name: int):
         level_data: LevelData = self._level_loader.load(level_name)
         
-        self._game_manager.change_state(states.in_game_state.InGameState(level_data))
+        self._game_manager.change_state(InGameState(level_data, level_name))
     
     def update(self):
         for button in self._buttons:

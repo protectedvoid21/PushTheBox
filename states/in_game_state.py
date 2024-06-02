@@ -1,16 +1,15 @@
-from copy import deepcopy, copy
 from dataclasses import dataclass
 
 import pygame.event
 from pygame import Surface, Vector2
 
+import event_manager
 from block import Block
 from collider_manager import can_move, is_close_to
 from constants import BOX_DISTANCE_TOLERANCE_PERCENTAGE, BACKGROUND_COLOR
 from level_loader import LevelData
 from pause_screen import PauseScreen
 from player import Player
-from states.menu_state import MenuState
 from states.state import State
 
 
@@ -22,19 +21,26 @@ class InGameState(State):
     _boxes: list[Block]
     _destinations: list[Block]
     _level_data: LevelData
+    
+    _level_number: int
 
     _pause_screen: PauseScreen
     _is_won: bool = False
     _is_paused: bool = False
 
 
-    def __init__(self, level_data: LevelData):
+    def __init__(self, level_data: LevelData, level_number: int):
         super().__init__()
+        self._level_number = level_number
         self._pause_screen = PauseScreen(self.resume_game, self.restart_game, self.back_to_menu)
-        self.restart_game(level_data)
+
+        self._player = level_data.player
+        self._blocks = level_data.blocks
+        self._boxes = level_data.boxes
+        self._destinations = level_data.destinations
 
     def update(self):
-        if pygame.event.get(pygame.KEYDOWN):
+        if event_manager.EventManager.get_events():
             if pygame.key.get_pressed()[pygame.K_ESCAPE]:
                 self._is_paused = not self._is_paused
 
@@ -65,15 +71,16 @@ class InGameState(State):
         self._is_paused = False
     
     
-    def restart_game(self, level_data: LevelData):
-        level_data_copy = copy(level_data)
-        self._player = level_data_copy.player
-        self._blocks = level_data_copy.blocks
-        self._boxes = level_data_copy.boxes
-        self._destinations = level_data_copy.destinations
+    def restart_game(self):
+        from states.level_select_state import LevelSelectState
+        select_level_state = LevelSelectState()
         
+        self._game_manager.change_state(select_level_state)
+        
+        select_level_state.select_level(self._level_number)
         
     def back_to_menu(self):
+        from states.menu_state import MenuState
         self._game_manager.change_state(MenuState())
     
 
