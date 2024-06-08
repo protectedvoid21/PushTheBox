@@ -3,6 +3,7 @@ import math
 from pygame import Vector2, Rect
 from block import Block
 
+MOVE_PREDICTION_THRESHOLD = 0.1
 
 def get_push_direction(entity_rect: Rect, pushed_rect: Rect):
     vecs_subtracted = Vector2(pushed_rect.center) - Vector2(entity_rect.center)
@@ -29,7 +30,7 @@ def can_move(blocks: list[Block], entity_rect: Rect, direction: Vector2):
             if block.is_pushable:
                 if block.rect == entity_rect:
                     continue
-                if can_move(blocks, block.rect, direction):
+                if can_move(blocks, block.rect, direction + MOVE_PREDICTION_THRESHOLD * direction):
                     dir_vector = get_push_direction(entity_rect, block.rect)
                     block.rect.move_ip(dir_vector * direction.magnitude())
                     return True

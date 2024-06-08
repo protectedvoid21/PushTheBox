@@ -5,6 +5,7 @@ from enum import Enum
 import pygame
 from pygame import Vector2
 
+from camera import Camera
 from constants import PLAYER_SPEED, PLAYER_ANIMATION_SPEED
 from game_time import GameTime
 
@@ -78,5 +79,5 @@ class Player:
         return self._rect
     
     
-    def draw(self, screen: pygame.Surface):
-        screen.blit(self._image, self._rect)
+    def draw(self, screen: pygame.Surface, camera: Camera):
+        screen.blit(self._image, camera.apply(self._rect))
