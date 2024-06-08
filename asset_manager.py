@@ -1,50 +1,51 @@
+import enum
 import os
 from dataclasses import dataclass
 
 import pygame
 import yaml
 
-from block import BlockType
+from AssetType import AssetType
 from constants import BLOCK_SIZE, PLAYER_TILE_SIZE, PLAYER_SIZE, TEXTURES_PATH_DIR
 from player import Direction
 
 ASSETS_FOLDER_PATH = 'assets'
+    
 
 @dataclass
 class AssetManager:
     _player_image: pygame.image
     _player_animations: dict[Direction, list[pygame.image]]
-    _block_images: dict[BlockType, pygame.image]
     
     _texture_paths: any
     
+    _asset_dict: dict[AssetType, pygame.image]
+    
     def __init__(self):
-        with open(TEXTURES_PATH_DIR, 'r') as file:
-            self._texture_paths = yaml.load(file, Loader=yaml.FullLoader)['textures']
-        
-        self._player_image = pygame.image.load(os.path.join(ASSETS_FOLDER_PATH, self._texture_paths['player']['image']))
-        self._player_image = pygame.transform.scale(self._player_image, PLAYER_SIZE)
-        
-        block_lookup = {
-            BlockType.WALL: 'wall',
-            BlockType.WALL_SIDE: 'wall_side',
-            BlockType.BOX: 'box',
-            BlockType.TARGET: 'target',
-        }
-        
-        self._block_images = {}
-        
-        for block_type, path in block_lookup.items():
-            self._block_images[block_type] = pygame.image.load(os.path.join(ASSETS_FOLDER_PATH, self._texture_paths['blocks'][path]))
-            self._block_images[block_type] = pygame.transform.scale(self._block_images[block_type], (BLOCK_SIZE, BLOCK_SIZE))
-                    
+        self._asset_dict = self._load_assets()
+                            
+        self._player_image = pygame.transform.scale(self._asset_dict[AssetType.PLAYER], PLAYER_SIZE)
+                
+        for block_type in [ AssetType.WALL, AssetType.WALL_SIDE, AssetType.BOX, AssetType.TARGET ]:
+            self._asset_dict[block_type] = pygame.transform.scale(self._asset_dict[block_type], (BLOCK_SIZE, BLOCK_SIZE))
+                            
         self._player_animations = self._parse_animations()
         
-                        
+    def _load_assets(self) -> dict[AssetType, pygame.image]:
+        with open(TEXTURES_PATH_DIR, 'r') as file:
+            self._texture_paths = yaml.load(file, Loader=yaml.FullLoader)['textures']
+            
+        asset_dict = {}
+        
+        for asset_type in AssetType:
+            asset_name = self._texture_paths[asset_type.value]
+            asset_image = pygame.image.load(os.path.join(ASSETS_FOLDER_PATH, asset_name))
+            asset_dict[asset_type] = asset_image
+            
+        return asset_dict
+            
     def _parse_animations(self) -> dict[Direction, list[pygame.image]]:
-        player_animations_path = os.path.join(ASSETS_FOLDER_PATH, 'player_animations.png')
-
-        animation_image = pygame.image.load(player_animations_path).convert_alpha()
+        animation_image = self._asset_dict[AssetType.PLAYER_ANIMATIONS].convert_alpha()
         directions = [Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.UP]
         
         animation_dict = {}
@@ -62,7 +63,6 @@ class AssetManager:
                 
         return animation_dict
         
-        
     @property
     def player_image(self) -> pygame.image:
         return self._player_image
@@ -72,6 +72,6 @@ class AssetManager:
         return self._player_animations
     
     @property
-    def block_images(self) -> dict[BlockType, pygame.image]:
-        return self._block_images
+    def asset_dict(self) -> dict[AssetType, pygame.image]:
+        return self._asset_dict
         

@@ -1,5 +1,7 @@
 from pygame import Surface
 
+import ui_positioner
+from asset_manager import AssetType
 from button import Button
 from level_loader import LevelLoader, LevelData
 from states.in_game_state import InGameState
@@ -13,12 +15,14 @@ class LevelSelectState(State):
     
     def __init__(self):
         super().__init__()
+
+        positions = ui_positioner.generate_positions_column(
+            x_position=200, y_position=100, button_gap=50, button_count=5, button_width=250, button_height=75
+        )
+
         self._buttons = [
-            Button((100, 100, 250, 75), "Level 1", click_event=lambda: self.select_level(1), color=(255, 255, 255)),
-            Button((100, 200, 250, 75), "Level 2", click_event=lambda: self.select_level(2), color=(255, 255, 255)),
-            Button((100, 300, 250, 75), "Level 3", click_event=lambda: self.select_level(3), color=(255, 255, 255)),
-            Button((100, 400, 250, 75), "Level 4", click_event=lambda: self.select_level(4), color=(255, 255, 255)),
-            Button((100, 500, 250, 75), "Level 5", click_event=lambda: self.select_level(5), color=(255, 255, 255)),
+            Button(positions[i], text=f'Level {i + 1}', click_event=lambda x=i: self.select_level(x + 1))
+            for i in range(5)
         ]
     
     def select_level(self, level_name: int):
@@ -31,5 +35,7 @@ class LevelSelectState(State):
             button.update()
 
     def draw(self, screen: Surface):
+        screen.blit(self._asset_manager.asset_dict[AssetType.MENU_BACKGROUND], (0, 0))
+        
         for button in self._buttons:
             button.draw(screen)

@@ -1,10 +1,13 @@
 textures:
-  player:
-    image: player.png
-    animations: player_animations.png
-  blocks:
-    wall: wall.png
-    wall_side: wall_side.png
-    wall_corner: wall_corner.png
-    box: box.png
-    target: dest.png
+  background_menu: menu_bg.png
+  player: player.png
+  animations: player_animations.png
+  wall: wall.png
+  wall_side: wall_side.png
+  wall_corner: wall_corner.png
+  box: box.png
+  target: dest.png
+    
+  play_button: play_btn.png
+  exit_button: exit_btn.png
+    

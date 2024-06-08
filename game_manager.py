@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import pygame
 from pygame import Surface
 
+from asset_manager import AssetManager
 from constants import *
 from event_manager import EventManager
 from game_time import GameTime
@@ -15,6 +16,7 @@ from title_generator import generate_title
 @dataclass
 class GameManager:
     _screen: Surface
+    _asset_manager: AssetManager
     _screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
     _current_state: State = None
     _game_time = GameTime(FRAMERATE)
@@ -26,12 +28,14 @@ class GameManager:
         self._screen = pygame.display.set_mode(self._screen_size)
         pygame.display.set_caption(MAIN_TITLE + ' - ' + generate_title())
         
+        self._asset_manager = AssetManager()
+        
         # self.change_state(InGameState(LevelLoader().load(1), 1))
         self.change_state(MenuState())
         
     def change_state(self, state: State):
         self._current_state = state
-        self._current_state.prepare(self)
+        self._current_state.prepare(self, self._asset_manager)
         
         
     def run(self):

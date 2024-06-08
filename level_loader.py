@@ -4,8 +4,8 @@ from dataclasses import dataclass
 import pygame.image
 from pygame import Vector2
 
-from asset_manager import AssetManager
-from block import Block, BlockType
+from asset_manager import AssetManager, AssetType
+from block import Block
 from constants import LEVELS_DIR, BLOCK_SIZE
 from player import Player
 
@@ -14,7 +14,7 @@ import yaml
 
 @dataclass
 class BlockData:
-    block_type: BlockType
+    block_type: AssetType
     pushable: bool = False
     solid: bool = False
     is_target: bool = False
@@ -42,9 +42,9 @@ class LevelLoader:
     _asset_manager: AssetManager
     _level_structures: dict
     _blocks_dict: dict[str, BlockData] = {
-        'X': BlockData(BlockType.TARGET, is_target=True),
-        'B': BlockData(BlockType.BOX, pushable=True),
-        'W': BlockData(BlockType.WALL, solid=True),
+        'X': BlockData(AssetType.TARGET, is_target=True),
+        'B': BlockData(AssetType.BOX, pushable=True),
+        'W': BlockData(AssetType.WALL, solid=True),
     }
 
     def __init__(self):
@@ -66,10 +66,10 @@ class LevelLoader:
                 if char in self._blocks_dict:
                     block_data = self._blocks_dict[char]
 
-                    block_image = self._asset_manager.block_images[block_data.block_type]
+                    block_image = self._asset_manager.asset_dict[block_data.block_type]
 
-                    if block_data.block_type == BlockType.WALL and is_block_side(j, i, lines):
-                        block_image = self._asset_manager.block_images[BlockType.WALL_SIDE]
+                    if block_data.block_type == AssetType.WALL and is_block_side(j, i, lines):
+                        block_image = self._asset_manager.asset_dict[AssetType.WALL_SIDE]
 
                     block = Block(block_image,
                                   pygame.Rect(Vector2(j, i) * BLOCK_SIZE, (BLOCK_SIZE, BLOCK_SIZE)),

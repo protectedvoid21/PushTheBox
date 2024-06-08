@@ -63,8 +63,6 @@ class Player:
         
     def _animate(self):
         self._elapsed_time += GameTime.delta_time() * PLAYER_ANIMATION_SPEED
-        # sin_val = math.sin(self._elapsed_time * 2) * 5
-        # self._image = pygame.transform.scale(self._image, (self._rect.width + sin_val, self._rect.height + sin_val))
         self._animation_index = math.floor(self._elapsed_time % len(self._animations[self._direction]))
                         
         self._image = self._animations[self._direction][int(self._animation_index)]
