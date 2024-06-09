@@ -18,7 +18,7 @@ class Button:
 
     def __init__(self, rect: tuple[int, int, int, int],
                  click_event: callable = None,
-                 text: str = None,
+                 text: str = '',
                  font: pygame.font.Font = None,
                  color: tuple[int, int, int] = (255, 255, 255),
                  image: pygame.image = None):
@@ -34,6 +34,10 @@ class Button:
 
     def add_click_event(self, event: callable):
         self._click_event = event
+        
+    @property
+    def rect(self) -> pygame.Rect:
+        return self._rect
 
 
     def update(self):

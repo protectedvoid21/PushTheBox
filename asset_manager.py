@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import pygame
 import yaml
 
-from AssetType import AssetType
+from asset_type import AssetType
 from constants import BLOCK_SIZE, PLAYER_TILE_SIZE, PLAYER_SIZE, TEXTURES_PATH_DIR
 from player import Direction
 
@@ -62,6 +62,9 @@ class AssetManager:
                 animation_dict[direction].append(image)
                 
         return animation_dict
+        
+    def __getitem__(self, item: AssetType) -> pygame.image:
+        return self._asset_dict[item]
         
     @property
     def player_image(self) -> pygame.image:
