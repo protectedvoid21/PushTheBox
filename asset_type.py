@@ -9,9 +9,9 @@ class AssetType(Enum):
     TARGET = 'target'
     PLAYER = 'player'
     PLAYER_ANIMATIONS = 'animations'
-    PLAY_BUTTON = 'play_button'
-    EXIT_BUTTON = 'exit_button'
-    BACK_BUTTON = 'back_button'
-    RESTART_BUTTON = 'restart_button'
-    RESUME_BUTTON = 'resume_button'
+
+    GREEN_BUTTON = 'green_button'
+    BLUE_BUTTON = 'blue_button'
+    RED_BUTTON = 'red_button'
+
     MAIN_TITLE = 'main_title'

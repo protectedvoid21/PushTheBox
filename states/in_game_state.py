@@ -14,6 +14,7 @@ from pause_screen import PauseScreen
 from player import Player
 from states.state import State
 from camera import Camera
+from win_screen import WinScreen
 
 
 @dataclass
@@ -29,6 +30,7 @@ class InGameState(State):
     _level_number: int
 
     _pause_screen: PauseScreen
+    _win_screen: WinScreen
     _is_won: bool = False
     _is_paused: bool = False
 
@@ -48,12 +50,19 @@ class InGameState(State):
     def prepare(self, game_manager, asset_manager):
         super().prepare(game_manager, asset_manager)
         self._pause_screen = PauseScreen(self.resume_game, self.restart_game, self.back_to_menu, asset_manager)
+        self._win_screen = WinScreen(asset_manager, lambda: self.next_level(), self.restart_game, self.back_to_menu)
 
 
     def update(self):
         if event_manager.EventManager.get_events():
             if pygame.key.get_pressed()[pygame.K_ESCAPE]:
                 self._is_paused = not self._is_paused
+
+        if self._is_won:
+            self._win_screen.update()
+            return
+
+        self._is_won = self.check_if_won()
 
         if self._is_paused:
             self._pause_screen.update()
@@ -64,9 +73,6 @@ class InGameState(State):
         if can_move(self._blocks, self._player.rect, player_direction):
             self._player.move(player_direction)
             self._camera.update(self._player.rect)
-
-        if not self._is_won:
-            self._is_won = self.check_if_won()
 
 
     def check_if_won(self) -> bool:
@@ -89,8 +95,15 @@ class InGameState(State):
         select_level_state = LevelSelectState()
 
         self._game_manager.change_state(select_level_state)
-
         select_level_state.select_level(self._level_number)
+
+
+    def next_level(self):
+        from states.level_select_state import LevelSelectState
+        select_level_state = LevelSelectState()
+
+        self._game_manager.change_state(select_level_state)
+        select_level_state.select_level(self._level_number + 1)
 
 
     def back_to_menu(self):
@@ -105,6 +118,10 @@ class InGameState(State):
 
         for block in self._blocks:
             screen.blit(block.image, self._camera.apply(block.rect))
+
+        if self._is_won:
+            self._win_screen.draw(screen)
+            return
 
         if self._is_paused:
             self._pause_screen.draw(screen)

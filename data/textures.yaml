@@ -9,10 +9,8 @@ textures:
   target: dest.png
   
   main_title: title.png
-    
-  play_button: play_btn.png
-  exit_button: exit_btn.png
-  back_button: back_btn.png
-  resume_button: resume_btn.png
-  restart_button: restart_btn.png
+  
+  green_button: green_btn.png
+  red_button: red_btn.png
+  blue_button: blue_btn.png
     

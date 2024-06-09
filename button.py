@@ -23,7 +23,7 @@ class Button:
                  color: tuple[int, int, int] = (255, 255, 255),
                  image: pygame.image = None):
         self._rect = pygame.rect.Rect(rect)
-        self._text = text
+        self._text = text.upper()
         self._font = font or pygame.font.Font(None, 32)
         self._color = color
         self._actual_color = color
@@ -44,7 +44,7 @@ class Button:
         self._actual_color = self._color
         
         if self.is_over(Vector2(pygame.mouse.get_pos())):
-            self._actual_color = self._color[0] - 50, self._color[1] - 50, self._color[2] - 50            
+            self._actual_color = self._color[0] - 50, self._color[1] - 50, self._color[2] - 50
             if self._click_event and pygame.mouse.get_pressed()[0]:
                 events = event_manager.EventManager.get_events()
                 if pygame.MOUSEBUTTONDOWN in (event.type for event in events):

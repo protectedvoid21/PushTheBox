@@ -1,6 +1,7 @@
 import enum
 import os
 from dataclasses import dataclass
+from typing import ClassVar
 
 import pygame
 import yaml
@@ -16,6 +17,7 @@ ASSETS_FOLDER_PATH = 'assets'
 class AssetManager:
     _player_image: pygame.image
     _player_animations: dict[Direction, list[pygame.image]]
+    default_font: pygame.font.Font
     
     _texture_paths: any
     
@@ -23,12 +25,14 @@ class AssetManager:
     
     def __init__(self):
         self._asset_dict = self._load_assets()
-                            
-        self._player_image = pygame.transform.scale(self._asset_dict[AssetType.PLAYER], PLAYER_SIZE)
-                
+
+        pygame.font.init()
+        self.default_font = pygame.font.Font(os.path.join(ASSETS_FOLDER_PATH, 'osd_mono.ttf'), 60)
+                                    
         for block_type in [ AssetType.WALL, AssetType.WALL_SIDE, AssetType.BOX, AssetType.TARGET ]:
             self._asset_dict[block_type] = pygame.transform.scale(self._asset_dict[block_type], (BLOCK_SIZE, BLOCK_SIZE))
                             
+        self._player_image = pygame.transform.scale(self._asset_dict[AssetType.PLAYER], PLAYER_SIZE)
         self._player_animations = self._parse_animations()
         
     def _load_assets(self) -> dict[AssetType, pygame.image]:
@@ -65,6 +69,7 @@ class AssetManager:
         
     def __getitem__(self, item: AssetType) -> pygame.image:
         return self._asset_dict[item]
+    
         
     @property
     def player_image(self) -> pygame.image:
