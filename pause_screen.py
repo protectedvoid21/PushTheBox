@@ -27,7 +27,7 @@ class PauseScreen:
             Button(button_positions[2], font=asset_manager.default_font, text='Exit', image=asset_manager[AssetType.RED_BUTTON], click_event=back_to_menu_callback)
         ]
 
-        ui_positioner.center_buttons_x(self._buttons, pygame.display.get_window_size())
+        ui_positioner.center_objects_x(list(map(lambda x: x.rect, self._buttons)), pygame.display.get_window_size())
 
         self._game_title_img = asset_manager[AssetType.MAIN_TITLE]
 

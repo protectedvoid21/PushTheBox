@@ -50,7 +50,7 @@ class InGameState(State):
     def prepare(self, game_manager, asset_manager):
         super().prepare(game_manager, asset_manager)
         self._pause_screen = PauseScreen(self.resume_game, self.restart_game, self.back_to_menu, asset_manager)
-        self._win_screen = WinScreen(asset_manager, lambda: self.next_level(), self.restart_game, self.back_to_menu)
+        self._win_screen = WinScreen(asset_manager, lambda: self.next_level(), self.restart_game, self.back_to_menu, self._level_number)
 
 
     def update(self):

@@ -2,8 +2,9 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 import pygame
-from pygame import Surface
+from pygame import Surface, Rect
 
+import asset_manager
 import ui_positioner
 from asset_manager import AssetManager
 from asset_type import AssetType
@@ -13,6 +14,11 @@ from button import Button
 @dataclass
 class WinScreen:
     _buttons: list[Button]
+    _desc_rect: Rect
+    _sub_desc_rect: Rect
+    _asset_manager: AssetManager
+    _desc_text: str = 'You won!'
+    _sub_desc_text: str = 'You have completed level'
     _bg_color: tuple[int, int, int] = (0, 0, 0)
 
 
@@ -20,7 +26,11 @@ class WinScreen:
                  asset_manager: AssetManager,
                  next_level_callback: Callable,
                  restart_callback: Callable,
-                 back_to_menu_callback: Callable):
+                 back_to_menu_callback: Callable,
+                 level_number: int):
+        self._sub_desc_text = f'{self._sub_desc_text} {level_number}!'
+        self._asset_manager = asset_manager
+        
         positions = ui_positioner.generate_positions_column(
             x_position=0, y_position=500, button_width=275, button_height=80, button_gap=50, button_count=3
         )
@@ -31,7 +41,12 @@ class WinScreen:
             Button(positions[2], font=asset_manager.default_font, text='Exit', image=asset_manager[AssetType.RED_BUTTON], click_event=back_to_menu_callback)
         ]
 
-        ui_positioner.center_buttons_x(self._buttons, pygame.display.get_window_size())
+        ui_positioner.center_objects_x(list(map(lambda x: x.rect, self._buttons)), pygame.display.get_window_size())
+        
+        self._desc_rect = Rect(0, 100, 700, 200)
+        self._sub_desc_rect = Rect(0, 200, 700, 200)
+        
+        ui_positioner.center_objects_x([self._desc_rect, self._sub_desc_rect], pygame.display.get_window_size())
 
 
     def update(self):
@@ -45,6 +60,15 @@ class WinScreen:
         background.set_alpha(128)
 
         screen.blit(background, (0, 0))
+
+        text = self._asset_manager.default_font.render(self._desc_text, True, (255, 255, 255))
+        text_rect = text.get_rect(center=self._desc_rect.center)
+        
+        sub_text = self._asset_manager.default_font.render(self._sub_desc_text, True, (255, 255, 255))
+        sub_text_rect = sub_text.get_rect(center=self._sub_desc_rect.center)
+        
+        screen.blit(text, text_rect)
+        screen.blit(sub_text, sub_text_rect)
 
         for button in self._buttons:
             button.draw(screen)
