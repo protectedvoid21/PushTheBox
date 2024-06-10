@@ -20,8 +20,44 @@ class BlockData:
     is_target: bool = False
 
 
+def neighbor_count(x: int, y: int, map: list[str]) -> int:
+    count = 0
+    
+    if x > 0 and map[y][x - 1] != ' ':
+        count += 1
+    if x < len(map[y]) - 1 and map[y][x + 1] != ' ':
+        count += 1
+    if y > 0 and map[y - 1][x] != ' ':
+        count += 1
+    if y < len(map) - 1 and map[y + 1][x] != ' ':
+        count += 1
+        
+    return count
+
+
+def is_block_bottom_corner(x: int, y: int, map: list[str]) -> bool:
+    block_char = map[y][x]
+    
+    neighbors = neighbor_count(x, y, map)
+    
+    if neighbors <= 1 or neighbors >= 3:
+        return False
+    
+    if y < 1:
+        return False
+    
+    if y > 0 and map[y - 1][x] == block_char:
+        if y < len(map) - 1 and map[y + 1][x] == block_char:
+            return False
+    
+    return True
+
+
 def is_block_side(x: int, y: int, map: list[str]) -> bool:
     block_char = map[y][x]
+
+    if is_block_bottom_corner(x, y, map):
+        return False
 
     if y > 0 and map[y - 1][x] == block_char:
         return True
@@ -47,11 +83,13 @@ class LevelLoader:
         'W': BlockData(AssetType.WALL, solid=True),
     }
 
+
     def __init__(self):
         with open(LEVELS_DIR, 'r') as file:
             lines = file.read()
             self._level_structures = yaml.load(lines, Loader=yaml.FullLoader)
             self._level_structures = self._level_structures['levels']
+
 
     def load(self, level_number: int) -> LevelData:
         lines = self._level_structures[level_number]

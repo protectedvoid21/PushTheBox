@@ -1,3 +1,5 @@
+from collections.abc import Callable
+
 import pygame
 from pygame import Rect, Surface
 
@@ -14,8 +16,7 @@ class PauseScreen:
     _buttons: list[Button] = []
 
 
-    def __init__(self, resume_game_callback: callable, restart_callback: callable, back_to_menu_callback: callable,
-                 asset_manager: AssetManager):
+    def __init__(self, resume_game_callback: Callable, restart_callback: Callable, back_to_menu_callback: Callable, asset_manager: AssetManager):
         button_positions = ui_positioner.generate_positions_column(
             x_position=0, y_position=300, button_width=275, button_height=80, button_gap=75, button_count=3
         )

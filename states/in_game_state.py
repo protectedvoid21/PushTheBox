@@ -54,9 +54,10 @@ class InGameState(State):
 
 
     def update(self):
-        if event_manager.EventManager.get_events():
-            if pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                self._is_paused = not self._is_paused
+        for event in event_manager.EventManager.get_events():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self._is_paused = not self._is_paused
 
         if self._is_won:
             self._win_screen.update()

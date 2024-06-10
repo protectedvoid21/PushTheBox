@@ -5,16 +5,18 @@ from pygame import Vector2, Surface
 
 import event_manager
 
-
 @dataclass
 class Button:
     _rect: pygame.Rect
     _text: str
     _font: pygame.font.Font
+    _current_rect: pygame.Rect
     _color: tuple[int, int, int]
     _actual_color: tuple[int, int, int]
     _image: pygame.image = None
     _click_event: callable = None
+    _is_hovered: bool = False
+
 
     def __init__(self, rect: tuple[int, int, int, int],
                  click_event: callable = None,
@@ -23,8 +25,9 @@ class Button:
                  color: tuple[int, int, int] = (255, 255, 255),
                  image: pygame.image = None):
         self._rect = pygame.rect.Rect(rect)
+        self._current_rect = self._rect
         self._text = text.upper()
-        self._font = font or pygame.font.Font(None, 32)
+        self._font = font or pygame.font.Font(None, 60)
         self._color = color
         self._actual_color = color
         self._image = image
@@ -32,33 +35,48 @@ class Button:
             self._image = pygame.transform.scale(self._image, (self._rect.width, self._rect.height))
         self._click_event = click_event
 
+
     def add_click_event(self, event: callable):
         self._click_event = event
-        
+
+
     @property
     def rect(self) -> pygame.Rect:
         return self._rect
 
 
+    def hover_effect(self, surface) -> pygame.image:
+        return pygame.transform.scale(surface, (self._rect.width + 10, self._rect.height + 10))
+
+
     def update(self):
         self._actual_color = self._color
+        self._current_rect = self._rect
         
-        if self.is_over(Vector2(pygame.mouse.get_pos())):
-            self._actual_color = self._color[0] - 50, self._color[1] - 50, self._color[2] - 50
+        self._is_hovered = self.is_over(Vector2(pygame.mouse.get_pos()))
+
+        if self._is_hovered:
             if self._click_event and pygame.mouse.get_pressed()[0]:
                 events = event_manager.EventManager.get_events()
                 if pygame.MOUSEBUTTONDOWN in (event.type for event in events):
                     self._click_event()
 
+            
+
     def draw(self, screen: Surface):
         if self._image:
-            screen.blit(self._image, self._rect)
+            if self._is_hovered:
+                offset_rect = self._current_rect.inflate(10, 10)
+                screen.blit(self.hover_effect(self._image), offset_rect)
+            else:
+                screen.blit(self._image, self._current_rect)
         else:
-            pygame.draw.rect(screen, self._actual_color, self._rect)
+            pygame.draw.rect(screen, self._actual_color, self._current_rect)
 
         text = self._font.render(self._text, True, (0, 0, 0))
         text_rect = text.get_rect(center=self._rect.center)
         screen.blit(text, text_rect)
+
 
     def is_over(self, pos: Vector2) -> bool:
         return self._rect.collidepoint(pos)
