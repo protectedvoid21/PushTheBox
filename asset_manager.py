@@ -32,6 +32,7 @@ class AssetManager:
             self._asset_dict[block_type] = pygame.transform.scale(self._asset_dict[block_type],
                                                                   (BLOCK_SIZE, BLOCK_SIZE))
 
+        self._asset_dict[AssetType.BG_IMAGE] = pygame.transform.scale(self[AssetType.BG_IMAGE], (BLOCK_SIZE, BLOCK_SIZE))
         self._player_image = pygame.transform.scale(self._asset_dict[AssetType.PLAYER], PLAYER_SIZE)
         self._player_animations = self._parse_animations()
 

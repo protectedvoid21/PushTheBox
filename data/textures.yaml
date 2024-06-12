@@ -9,6 +9,7 @@ textures:
   target: dest.png
   
   main_title: title.png
+  bg_image: castle_floor.jpg
   
   green_button: green_btn.png
   red_button: red_btn.png

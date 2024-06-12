@@ -15,3 +15,4 @@ class AssetType(Enum):
     RED_BUTTON = 'red_button'
 
     MAIN_TITLE = 'main_title'
+    BG_IMAGE = 'bg_image'

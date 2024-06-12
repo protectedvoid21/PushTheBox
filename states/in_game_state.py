@@ -6,6 +6,7 @@ from pygame import Surface, Vector2
 import camera
 import constants
 import event_manager
+from asset_type import AssetType
 from block import Block
 from collider_manager import can_move, is_close_to
 from constants import BOX_DISTANCE_TOLERANCE_PERCENTAGE, BACKGROUND_COLOR
@@ -22,7 +23,7 @@ class InGameState(State):
     _player: Player
     _camera: Camera
     _blocks: list[Block]
-
+    
     _boxes: list[Block]
     _destinations: list[Block]
     _level_data: LevelData
@@ -51,7 +52,7 @@ class InGameState(State):
         super().prepare(game_manager, asset_manager)
         self._pause_screen = PauseScreen(self.resume_game, self.restart_game, self.back_to_menu, asset_manager)
         self._win_screen = WinScreen(asset_manager, lambda: self.next_level(), self.restart_game, self.back_to_menu, self._level_number)
-
+        
 
     def update(self):
         for event in event_manager.EventManager.get_events():
@@ -59,11 +60,11 @@ class InGameState(State):
                 if event.key == pygame.K_ESCAPE:
                     self._is_paused = not self._is_paused
 
+
+        self._is_won = self.check_if_won()
         if self._is_won:
             self._win_screen.update()
             return
-
-        self._is_won = self.check_if_won()
 
         if self._is_paused:
             self._pause_screen.update()
@@ -113,12 +114,12 @@ class InGameState(State):
 
 
     def draw(self, screen: Surface):
-        screen.fill(BACKGROUND_COLOR)
-
-        self._player.draw(screen, self._camera)
-
+        screen.fill((25,25,25))
+        
         for block in self._blocks:
             screen.blit(block.image, self._camera.apply(block.rect))
+
+        self._player.draw(screen, self._camera)
 
         if self._is_won:
             self._win_screen.draw(screen)
