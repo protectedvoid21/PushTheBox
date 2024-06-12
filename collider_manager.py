@@ -4,6 +4,7 @@ from pygame import Vector2, Rect
 from block import Block
 
 MOVE_PREDICTION_THRESHOLD = 0.1
+MOVE_PREDICTION_THRESHOLD = 0.3
 
 def get_push_direction(entity_rect: Rect, pushed_rect: Rect):
     vecs_subtracted = Vector2(pushed_rect.center) - Vector2(entity_rect.center)
