@@ -7,6 +7,11 @@ import event_manager
 
 @dataclass
 class Button:
+    """
+    Class representing a button in the game.
+    
+    Button can have a text, image, and a click event.
+    """
     _rect: pygame.Rect
     _text: str
     _font: pygame.font.Font
@@ -24,6 +29,17 @@ class Button:
                  font: pygame.font.Font = None,
                  color: tuple[int, int, int] = (255, 255, 255),
                  image: pygame.image = None):
+        """
+        Initialize the Button with the given rectangle, click event, text, font, color, and image.
+
+        Args:
+            rect (tuple[int, int, int, int]): The rectangle representing the button's position and size.
+            click_event (callable): The event that occurs when the button is clicked.
+            text (str): The text on the button.
+            font (pygame.font.Font): The font of the text.
+            color (tuple[int, int, int]): The color of the button.
+            image (pygame.image): The image of the button.
+        """
         self._rect = pygame.rect.Rect(rect)
         self._current_rect = self._rect
         self._text = text.upper()
@@ -37,19 +53,45 @@ class Button:
 
 
     def add_click_event(self, event: callable):
+        """
+        Add a click event to the button.
+
+        Args:
+            event (callable): The event to add.
+        """
         self._click_event = event
 
 
     @property
     def rect(self) -> pygame.Rect:
+        """
+        Get the rectangle representing the button's position and size.
+
+        Returns:
+            pygame.Rect: The rectangle representing the button's position and size.
+        """
         return self._rect
 
 
     def hover_effect(self, surface) -> pygame.image:
+        """
+        Get the hover effect for the button.
+
+        Args:
+            surface (pygame.Surface): The surface to apply the hover effect to.
+
+        Returns:
+            pygame.image: The image with the hover effect applied.
+        """
         return pygame.transform.scale(surface, (self._rect.width + 10, self._rect.height + 10))
 
 
     def update(self):
+        """
+         Update the button.
+
+         This method should be called once per frame. It updates the color and rectangle of the button based on whether it is being hovered over.
+         """
         self._actual_color = self._color
         self._current_rect = self._rect
         
@@ -64,6 +106,12 @@ class Button:
             
 
     def draw(self, screen: Surface):
+        """
+        Draw the button on the screen.
+
+        Args:
+            screen (Surface): The game screen.
+        """
         if self._image:
             if self._is_hovered:
                 offset_rect = self._current_rect.inflate(10, 10)
@@ -79,4 +127,13 @@ class Button:
 
 
     def is_over(self, pos: Vector2) -> bool:
+        """
+        Check whether the button is being hovered over.
+
+        Args:
+            pos (Vector2): The position of the mouse.
+
+        Returns:
+            bool: Whether the button is being hovered over.
+        """
         return self._rect.collidepoint(pos)

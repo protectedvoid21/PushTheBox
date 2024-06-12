@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class AssetType(Enum):
+    """Enum representing the types of assets used in the game."""
     MENU_BACKGROUND = 'background_menu'
     WALL = 'wall'
     WALL_SIDE = 'wall_side'

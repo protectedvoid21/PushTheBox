@@ -13,6 +13,11 @@ ASSETS_FOLDER_PATH = 'assets'
 
 @dataclass
 class AssetManager:
+    """
+        Manages the assets of the game. Serves as a central repository for all game assets.
+        
+        Assets can be accessed by their type, e.g. AssetManager[AssetType.PLAYER].
+    """
     _player_image: pygame.image
     _player_animations: dict[Direction, list[pygame.image]]
     default_font: pygame.font.Font
@@ -23,6 +28,11 @@ class AssetManager:
 
 
     def __init__(self):
+        """
+            Initialize the AssetManager.
+
+            Loads the assets and initializes the player image, player animations, and default font.
+        """
         self._asset_dict = self._load_assets()
 
         pygame.font.init()
@@ -52,6 +62,12 @@ class AssetManager:
 
 
     def _parse_animations(self) -> dict[Direction, list[pygame.image]]:
+        """
+            Parse the player animations from the player animations image.
+    
+            Returns:
+                dict[Direction, list[pygame.image]]: A dictionary mapping directions to lists of images.
+        """
         animation_image = self._asset_dict[AssetType.PLAYER_ANIMATIONS].convert_alpha()
         directions = [Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.UP]
 
@@ -72,6 +88,15 @@ class AssetManager:
 
 
     def __getitem__(self, item: AssetType) -> pygame.image:
+        """
+            Get the image of the given asset type.
+    
+            Args:
+                item (AssetType): The asset type.
+    
+            Returns:
+                pygame.image: The image of the asset type.
+        """
         return self._asset_dict[item]
 
 

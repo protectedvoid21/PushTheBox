@@ -18,6 +18,13 @@ class Direction(Enum):
 
 @dataclass
 class Player:
+    """
+    A class that represents the player in the game.
+    
+    The player has a speed, a rect, an image, animations, an animation index, an elapsed time, and a direction.
+    
+    The player can move, get the move direction, animate, and be drawn.
+    """
     _speed: int
     _rect: pygame.Rect
     _image: pygame.image
@@ -28,6 +35,14 @@ class Player:
     _direction: Direction = Direction.DOWN
     
     def __init__(self, image: pygame.image, initial_position: Vector2, animations: dict[Direction, list[pygame.image]]):
+        """
+        Initialize the Player with the given image, initial position, and animations.
+    
+        Args:
+            image (pygame.image): The image of the player.
+            initial_position (Vector2): The initial position of the player.
+            animations (dict[Direction, list[pygame.image]]): The animations of the player.
+        """
         self._image = image
         self._rect = self._image.get_rect()
         self._rect.center = initial_position + Vector2(self._rect.width / 2, self._rect.height / 2)
@@ -36,6 +51,12 @@ class Player:
         
 
     def get_move_direction(self) -> Vector2:
+        """
+        Get the direction the player is trying to move.
+    
+        Returns:
+            Vector2: The proposed player move direction.
+        """
         keys = pygame.key.get_pressed()
         
         direction_vector = Vector2(0, 0)
@@ -69,13 +90,32 @@ class Player:
         
     
     def move(self, direction: Vector2):
+        """
+        Move the player in the given direction.
+    
+        Args:
+            direction (Vector2): The direction to move the player.
+        """
         self._rect.move_ip(direction)
         
         
     @property
     def rect(self):
+        """
+        Get the rectangle representing the player's position and size.
+        
+        Returns:
+            pygame.Rect: The rectangle representing the player's position and size.
+        """
         return self._rect
     
     
     def draw(self, screen: pygame.Surface, camera: Camera):
+        """
+        Draw the player on the screen.
+
+        Args:
+            screen (pygame.Surface): The game screen.
+            camera (Camera): The game camera.
+        """
         screen.blit(self._image, camera.apply(self._rect))

@@ -13,6 +13,7 @@ from button import Button
 
 @dataclass
 class WinScreen:
+    """Represents the win screen in the game."""
     _buttons: list[Button]
     _desc_rect: Rect
     _sub_desc_rect: Rect
@@ -28,6 +29,16 @@ class WinScreen:
                  restart_callback: Callable,
                  back_to_menu_callback: Callable,
                  level_number: int):
+        """
+        Initialize the WinScreen with the given asset manager, callbacks, and level number.
+
+        Args:
+            asset_manager (AssetManager): The asset manager.
+            next_level_callback (Callable): The callback function to go to the next level.
+            restart_callback (Callable): The callback function to restart the level.
+            back_to_menu_callback (Callable): The callback function to go back to the menu.
+            level_number (int): The number of the level that was completed.
+        """
         self._sub_desc_text = f'{self._sub_desc_text} {level_number}!'
         self._asset_manager = asset_manager
         
@@ -50,11 +61,22 @@ class WinScreen:
 
 
     def update(self):
+        """
+        Update the win screen.
+
+        This method should be called once per frame. It updates the buttons on the win screen.
+        """
         for button in self._buttons:
             button.update()
 
 
     def draw(self, screen: Surface):
+        """
+        Draw the win screen.
+
+        Args:
+            screen (Surface): The game screen.
+        """
         background = Surface((screen.get_width(), screen.get_height()))
         background.fill(self._bg_color)
         background.set_alpha(128)

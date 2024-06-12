@@ -3,18 +3,16 @@ from dataclasses import dataclass
 import pygame.event
 from pygame import Surface, Vector2
 
-import camera
 import constants
 import event_manager
-from asset_type import AssetType
 from block import Block
+from camera import Camera
 from collider_manager import can_move, is_close_to
-from constants import BOX_DISTANCE_TOLERANCE_PERCENTAGE, BACKGROUND_COLOR
+from constants import BOX_DISTANCE_TOLERANCE_PERCENTAGE
 from level_loader import LevelData
 from pause_screen import PauseScreen
 from player import Player
 from states.state import State
-from camera import Camera
 from win_screen import WinScreen
 
 
@@ -37,6 +35,13 @@ class InGameState(State):
 
 
     def __init__(self, level_data: LevelData, level_number: int):
+        """
+            Initialize the InGameState with the given level data and level number.
+
+            Args:
+                level_data (LevelData): The data of the level to be played.
+                level_number (int): The number of the level to be played.
+        """
         super().__init__()
         self._level_number = level_number
 
@@ -78,6 +83,12 @@ class InGameState(State):
 
 
     def check_if_won(self) -> bool:
+        """
+            Check if the game has been won.
+
+            Returns:
+                bool: True if the game has been won, False otherwise.
+        """
         for box in self._boxes:
             distance_tolerance = box.rect.width / BOX_DISTANCE_TOLERANCE_PERCENTAGE
 
@@ -89,10 +100,12 @@ class InGameState(State):
 
 
     def resume_game(self):
+        """Resume the game if it is paused."""
         self._is_paused = False
 
 
     def restart_game(self):
+        """Restart the game."""
         from states.level_select_state import LevelSelectState
         select_level_state = LevelSelectState()
 
@@ -101,6 +114,7 @@ class InGameState(State):
 
 
     def next_level(self):
+        """Proceeds to next level with number equal to the current level number plus one."""
         from states.level_select_state import LevelSelectState
         select_level_state = LevelSelectState()
 
@@ -109,6 +123,7 @@ class InGameState(State):
 
 
     def back_to_menu(self):
+        """Go back to the main menu."""
         from states.menu_state import MenuState
         self._game_manager.change_state(MenuState())
 

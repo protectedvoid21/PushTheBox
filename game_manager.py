@@ -15,6 +15,11 @@ from title_generator import generate_title
 
 @dataclass
 class GameManager:
+    """
+        Global game manager that manages the game loop and the current state of the game.
+        
+        Stores the current screen, asset manager, screen size, current state, and game time.
+    """
     _screen: Surface
     _asset_manager: AssetManager
     _screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -23,6 +28,9 @@ class GameManager:
 
 
     def __init__(self):
+        """
+            Manages the events in the game.
+        """
         pygame.init()
         pygame.font.init()
 
@@ -31,16 +39,27 @@ class GameManager:
 
         self._asset_manager = AssetManager()
 
-        # self.change_state(InGameState(LevelLoader().load(1), 1))
         self.change_state(MenuState())
 
 
     def change_state(self, state: State):
+        """
+            Change the state of the game.
+    
+            Args:
+                state (State): The new state.
+        """
         self._current_state = state
         self._current_state.prepare(self, self._asset_manager)
 
 
     def run(self):
+        """
+            Run the game.
+    
+            This method should be called to start the game. It runs the game loop, 
+            which continues until the game state is None (i.e. the game is closed).
+        """
         while self._current_state:
             self._game_time.update()
             EventManager.update()

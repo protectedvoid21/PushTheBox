@@ -10,6 +10,8 @@ from button import Button
 
 
 class PauseScreen:
+    """Represents the pause screen in the game."""
+
     _game_title_img: pygame.image
     _game_title_rect: Rect
     _background_color: tuple[int, int, int] = (0, 0, 0)
@@ -17,6 +19,15 @@ class PauseScreen:
 
 
     def __init__(self, resume_game_callback: Callable, restart_callback: Callable, back_to_menu_callback: Callable, asset_manager: AssetManager):
+        """
+            Initialize the PauseScreen.
+    
+            Args:
+                resume_game_callback (Callable): The callback function to resume the game.
+                restart_callback (Callable): The callback function to restart the game.
+                back_to_menu_callback (Callable): The callback function to go back to the menu.
+                asset_manager (AssetManager): The asset manager.
+        """
         button_positions = ui_positioner.generate_positions_column(
             x_position=0, y_position=300, button_width=275, button_height=80, button_gap=75, button_count=3
         )
@@ -36,11 +47,18 @@ class PauseScreen:
 
 
     def update(self):
+        """This method should be called once per frame. Updates elements of the pause screen."""
         for button in self._buttons:
             button.update()
 
 
     def draw(self, screen: Surface):
+        """
+            Draw the pause screen to passed screen.
+    
+            Args:
+                screen (Surface): The game screen.
+        """
         background = Surface((screen.get_width(), screen.get_height()))
         background.fill(self._background_color)
         background.set_alpha(128)

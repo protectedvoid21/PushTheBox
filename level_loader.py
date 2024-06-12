@@ -22,6 +22,17 @@ class BlockData:
 
 
 def neighbor_count(x: int, y: int, map: list[str]) -> int:
+    """
+        Calculate the number of neighbors for a given block in the map.
+    
+        Args:
+            x (int): The x-coordinate of the block.
+            y (int): The y-coordinate of the block.
+            map (list[str]): The 2D map of the level.
+    
+        Returns:
+            int: The number of neighbors of the block.
+    """
     count = 0
     
     if x > 0 and map[y][x - 1] != ' ':
@@ -37,6 +48,19 @@ def neighbor_count(x: int, y: int, map: list[str]) -> int:
 
 
 def is_block_bottom_corner(x: int, y: int, map: list[str]) -> bool:
+    """
+        Check if a block is a bottom corner block.
+    
+        A block is considered a bottom corner block if it has exactly two neighbors and it is not on the top row.
+    
+        Args:
+            x (int): The x-coordinate of the block.
+            y (int): The y-coordinate of the block.
+            map (list[str]): The 2D map of the level.
+    
+        Returns:
+            bool: True if the block is a bottom corner block, False otherwise.
+    """
     block_char = map[y][x]
     
     neighbors = neighbor_count(x, y, map)
@@ -51,6 +75,20 @@ def is_block_bottom_corner(x: int, y: int, map: list[str]) -> bool:
 
 
 def is_block_side(x: int, y: int, map: list[str]) -> bool:
+    """
+        Check if a block is a side block.
+    
+        A block is considered a side block if it is not a bottom corner block and 
+        it has a neighbor below it or it has exactly two neighbors.
+    
+        Args:
+            x (int): The x-coordinate of the block.
+            y (int): The y-coordinate of the block.
+            map (list[str]): The 2D map of the level.
+    
+        Returns:
+            bool: True if the block is a side block, False otherwise.
+    """
     block_char = map[y][x]
     
     if is_block_bottom_corner(x, y, map):
@@ -68,7 +106,17 @@ def is_block_side(x: int, y: int, map: list[str]) -> bool:
 
 
 class LevelData:
+    """Represents the data required to load for level in the game."""
     def __init__(self, blocks: list[Block], boxes: list[Block], destinations: list[Block], player: Player):
+        """
+            Initialize the LevelData with the given blocks, boxes, destinations, and player.
+    
+            Args:
+                blocks (list[Block]): A list of all blocks in the level.
+                boxes (list[Block]): A list of all boxes in the level.
+                destinations (list[Block]): A list of all destination blocks in the level.
+                player (Player): The player object.
+        """
         self.blocks = blocks
         self.player = player
         self.boxes = boxes
@@ -76,6 +124,8 @@ class LevelData:
 
 
 class LevelLoader:
+    """Converts the level structures from a file into a playable level."""
+    
     _asset_manager: AssetManager
     _level_structures: dict
     _blocks_dict: dict[str, BlockData] = {
@@ -87,6 +137,7 @@ class LevelLoader:
 
 
     def __init__(self):
+        """Initialize the LevelLoader. Reads the level structures from the levels file."""
         with open(LEVELS_DIR, 'r') as file:
             lines = file.read()
             self._level_structures = yaml.load(lines, Loader=yaml.FullLoader)
@@ -94,6 +145,17 @@ class LevelLoader:
             
             
     def _map_blockdata_to_block(self, block_data: BlockData, position: Vector2, override_img: Surface = None) -> Block:
+        """
+            Map block data to a block.
+    
+            Args:
+                block_data (BlockData): The block data to map.
+                position (Vector2): The position of the block.
+                override_img (Surface, optional): An image to override the block's default image. Defaults to None.
+    
+            Returns:
+                Block: The resulting block.
+        """
         block_image = override_img if override_img else self._asset_manager.asset_dict[block_data.block_type]
         
         return Block(block_image,
@@ -105,6 +167,15 @@ class LevelLoader:
             
 
     def load(self, level_number: int) -> LevelData:
+        """
+            Load a level.
+    
+            Args:
+                level_number (int): The number of the level to load.
+    
+            Returns:
+                LevelData: The data of the loaded level.
+        """
         lines = self._level_structures[level_number]
 
         blocks: list[Block] = []
