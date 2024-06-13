@@ -156,7 +156,7 @@ class LevelLoader:
             Returns:
                 Block: The resulting block.
         """
-        block_image = override_img if override_img else self._asset_manager.asset_dict[block_data.block_type]
+        block_image = override_img if override_img else self._asset_manager[block_data.block_type]
         
         return Block(block_image,
                      pygame.Rect(position * BLOCK_SIZE, (BLOCK_SIZE, BLOCK_SIZE)),

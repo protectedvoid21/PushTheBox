@@ -42,7 +42,7 @@ class PauseScreen:
 
         self._game_title_img = asset_manager[AssetType.MAIN_TITLE]
 
-        self._game_title_rect = Rect(0, 100, 700, 200)
+        self._game_title_rect = Rect(0, 100, 800, 200)
         self._game_title_rect.centerx = pygame.display.get_window_size()[0] // 2
 
 
